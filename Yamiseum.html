@@ -1,0 +1,1401 @@
+<!DOCTYPE html>
+<html lang="de">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Yamiseum</title>
+    <link rel="icon" type="image/png" href="https://forum.griefergames.de/images/style-31/favicon-48x48.png">
+    <link href="https://fonts.googleapis.com/css2?family=Assistant:wght@600;900&display=swap" rel="stylesheet">
+    <style>
+        body {
+            font-family: Assistant, sans-serif;
+            font-weight: 400;
+            background-color: #0C0E14;
+            color: #ffffff;
+            margin: 0;
+            padding: 0;
+        }
+        header {
+            position: sticky;
+            top: 0;
+            z-index: 1000;
+            background-color: #1D2333;
+            padding: 7px 10px;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            height: 66px;
+        }
+
+        .header-left {
+            display: flex;
+            align-items: center;
+            gap: 15px;
+            flex: 1;
+        }
+
+        .header-center {
+            flex: 2;
+            display: flex;
+            justify-content: center;
+            position: absolute;
+            left: 50%;
+            transform: translateX(-50%);
+            align-items: center;
+        }
+
+        .header-right {
+            display: flex;
+            align-items: center;
+            gap: 15px;
+        }
+
+        .header-buttons {
+            display: flex;
+            align-items: center;
+            gap: 5px;
+            margin-left: 1px;
+        }
+
+        .header-button:hover {
+            color: #2B3246;
+        }
+
+        .header-right::before {
+            content: "";
+            display: inline-block;
+            width: 1px;
+            height: 32px;
+            background-color: #3F485F;
+        }
+
+        .discord-container {
+            display: flex;
+            align-items: center;
+            margin-right: 9px;
+        }
+
+        .discord-container::before {
+            content: "";
+            display: block;
+            width: 1px;
+            height: 32px;
+            background-color: #3F485F;
+            margin-right: 25px;
+        }
+
+        header input {
+            padding: 15px;
+            width: 400px;
+            max-width: 100%;
+            font-size: 16px;
+            background: #11151F;
+            color: #fff;
+            border: none;
+            border-radius: 25px;
+            transition: width 0.3s ease;
+        }
+
+        #success-message {
+            display: none;
+            position: fixed;
+            bottom: 20px;
+            right: 20px;
+            background: #4caf50;
+            color: white;
+            padding: 10px 20px;
+            border-radius: 5px;
+            box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+            font-size: 14px;
+        }
+
+        #successdel-message {
+            display: none;
+            position: fixed;
+            bottom: 20px;
+            right: 20px;
+            background: #4caf50;
+            color: white;
+            padding: 10px 20px;
+            border-radius: 5px;
+            box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+            font-size: 14px;
+        }
+
+        .add-button {
+            background: #C20C0C;
+            color: white;
+            border: none;
+            padding: 10px 20px;
+            border-radius: 10px;
+            font-size: 16px;
+            cursor: pointer;
+            transition: background 0.3s ease;
+        }
+
+        .add-button:hover {
+            background: #850909;
+        }
+
+        .header-logo {
+            width: 181px;
+            height: auto;
+            padding: 16px;
+            cursor: pointer;
+        }
+
+        .header-brand-text {
+            font-size: 22px;
+            white-space: nowrap;
+            margin: 0;
+        }
+
+        input, textarea, button, select {
+            font-family: 'Assistant', sans-serif;
+        }
+
+        header select {
+            padding: 5px;
+            background: #11151F;
+            color: #fff;
+            border: none;
+            border-radius: 10px;
+        }
+
+        .container {
+            padding: 10px;
+            margin-left: 80px;
+        }
+
+        .categories {
+            margin-top: 10px;
+            display: flex;
+            flex-direction: column;
+            gap: 10px;
+        }
+
+        .category {
+            background-color: #1D2333;
+            padding: 12px;
+            border-radius: 10px;
+            cursor: pointer;
+            transition: background 0.3s;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+        }
+        .entries {
+            display: flex;
+            flex-wrap: wrap;
+            gap: 19px;
+            margin-top: 15px;
+            margin-bottom: 15px;
+            justify-content: center;
+        }
+        .entries.hidden {
+            display: none;
+        }
+        .entry {
+            background: #21283B;
+            padding: 20px;
+            border-radius: 20px;
+            width: 200px;
+            height: 200px;
+            text-align: center;
+            cursor: pointer;
+            transition: transform 0.3s;
+            position: relative;
+            display: flex;
+            flex-direction: column;
+            justify-content: center;
+            align-items: center;
+        }
+        .entry:hover {
+            transform: scale(1.04);
+        }
+        .entry img {
+            max-width: 100%;
+            max-height: 120px;
+            object-fit: cover;
+            border-radius: 5px;
+        }
+        .entry .edit-btn {
+            background: #141824;
+            margin-top: 10px;
+            color: #fff;
+            border: none;
+            border-radius: 10px;
+            padding: 5px 10px;
+            cursor: pointer;
+            position: absolute;
+	        display: flex;
+        }
+        .entry .edit-btn:hover {
+            background: #0C0E14;
+        }
+        .entry .label {
+            position: absolute;
+            top: 5px;
+            right: 10px;
+            background: #01426b;
+            color: #fff;
+            padding: 2px 8px;
+            border-radius: 25px;
+            font-size: 14px;
+        }
+
+        .entry-title {
+            background-color: #2D3242;
+            padding: 10px;
+            border-radius: 20px;
+            font-weight: bold;
+            text-align: center;
+            max-width: 100%;
+            margin-top: 15px;
+        }
+
+        .overlay-title {
+            background-color: #2B3246;
+            padding: 12px;
+            border-radius: 25px;
+            font-weight: 900;
+            font-size: 25px;
+            color: #ffffff;
+            margin-bottom: 15px;
+            text-align: center;
+        }
+
+        .add-entry {
+            margin-top: 20px;
+            display: flex;
+            gap: 10px;
+        }
+        .add-entry input, .add-entry select {
+            padding: 5px;
+            background: #11151F;
+            color: #fff;
+            border: none;
+            border-radius: 5px;
+        }
+        .add-entry button {
+            background: #C20C0C;
+            color: #fff;
+            border: none;
+            border-radius: 5px;
+            padding: 5px 10px;
+            cursor: pointer;
+        }
+        .add-entry button:hover {
+            background: #850909;
+        }
+        .overlay {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background: rgba(0, 0, 0, 0.8);
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            display: none;
+            z-index: 2000;
+        }
+        .overlay-content {
+            background: #1D2333;
+            padding: 20px;
+            border-radius: 20px;
+            text-align: center;
+            max-width: 500px;
+            width: 100%;
+            max-height: 80vh;
+            overflow-y: auto;
+            scrollbar-width: thin;
+            scrollbar-color: #2B3246 #11151F;
+        }
+        .overlay-content img {
+            max-width: 100%;
+            max-height: 75vh;
+        }
+        .overlay-content input, .overlay-content select, .overlay-content textarea, .overlay-content button {
+            width: 100%;
+            margin: 10px 0;
+        }
+        .overlay-content input, .overlay-content select, .overlay-content textarea {
+            width: calc(100% - 20px);
+            margin: 10px auto;
+            padding: 10px;
+            background: #11151F;
+            color: #fff;
+            border: none;
+            border-radius: 10px;
+            box-sizing: border-box;
+        }
+        .overlay-content textarea {
+            resize: none;
+            height: 100px;
+        }
+        .overlay-content button {
+            background: #11151F;
+            color: #fff;
+            border: none;
+            border-radius: 10px;
+            padding: 10px;
+            cursor: pointer;
+        }
+        .overlay-content button:hover {
+            background: #0C0E14;
+        }
+        .overlay-close {
+            background: #ff5c5c;
+        }
+        .overlay-close:hover {
+            background: #ff0000;
+        }
+
+        .import-export-container {
+            text-align: right;
+            margin: 20px;
+            position: relative;
+        }
+
+        .menu {
+            display: inline-block;
+            position: relative;
+        }
+
+        .main-button {
+            background: #C20C0C;
+            color: #fff;
+            border: none;
+            border-radius: 50%;
+            width: 50px;
+            height: 50px;
+            font-size: 24px;
+            cursor: pointer;
+            transition: background 0.3s;
+        }
+
+        .main-button:hover {
+            background: #850909;
+        }
+
+        .search-filter-container {
+            position: relative;
+            display: flex;
+            align-items: center;
+        }
+
+        .search-filter-container input[type="text"] {
+            flex: 1;
+            padding: 15px;
+            background: #11151F;
+            color: #fff;
+            border: none;
+            border-radius: 25px 0 0 25px;
+            font-size: 16px;
+            outline: none;
+        }
+
+        .input-with-clear {
+            position: relative;
+            flex: 1;
+        }
+
+        .clear-button {
+            position: absolute;
+            top: 50%;
+            right: 15px;
+            transform: translateY(-50%);
+            cursor: pointer;
+            color: #999;
+            font-size: 30px;
+            display: none;
+            user-select: none;
+        }
+
+        .clear-button:hover {
+            color: #fff;
+        }
+
+        .dropdown {
+            display: none;
+            max-width: 135px;
+            position: fixed;
+            bottom: 810px;
+            right: 0;
+            background: #171C29;
+            padding: 10px;
+            border-radius: 10px;
+            margin-right: 5px;
+            box-shadow: 0px 4px 6px rgba(0, 0, 0, 0.1);
+            text-align: right;
+            z-index: 1000;
+        }
+
+        .dropdown button {
+            background: #C20C0C;
+            color: #fff;
+            border: none;
+            border-radius: 4px;
+            padding: 10px 15px;
+            margin: 5px 0;
+            cursor: pointer;
+            width: 100%;
+            text-align: right;
+        }
+
+        .dropdown button:hover {
+            background: #850909;
+        }
+
+        .menu.open .dropdown {
+            display: block;
+        }
+
+        .settings-container {
+            display: flex;
+            align-items: center;
+            margin-right: 9px;
+        }
+
+        .settings-container::before {
+            content: "";
+            display: block;
+            width: 1px;
+            height: 32px;
+            background-color: #3F485F;
+            margin-right: 21px;
+        }
+
+        .settings-button {
+            display: inline-block;
+            background: none;
+            border: none;
+            cursor: pointer;
+            text-decoration: none;
+            margin-right: 4px;
+            transition: opacity 0.2s, background 0.3s ease;
+            padding: 8px;
+            font-size: 20px;
+            color: #ffffff;
+            border-radius: 50%;
+            margin-bottom: 2px;
+        }
+
+        .settings-button:hover {
+            color: #3A3B58;
+        }
+
+        .settings-button i {
+            vertical-align: middle;
+        }
+
+        .discord-button {
+            display: inline-block;
+            background: none;
+            border: none;
+            cursor: pointer;
+            text-decoration: none;
+            margin-right: 6px;
+            transition: opacity 0.2s;
+        }
+
+        .discord-button:hover {
+            opacity: 0.8;
+        }
+
+        .discord-icon {
+            width: 30px;
+            height: auto;
+            vertical-align: middle;
+        }
+
+        .sidebar-discord {
+            position: absolute;
+            bottom: 40px;
+            left: 50%;
+            transform: translateX(-50%);
+            text-align: center;
+        }
+
+        .header-button {
+            display: flex;
+            align-items: center;
+            gap: 5px;
+            color: #616A82;
+            padding: 10px 15px;
+            border-radius: 10px;
+            text-decoration: none;
+            font-size: 16px;
+            transition: background 0.3s ease, transform 0.2s ease;
+        }
+
+        .header-button i {
+            font-size: 18px;
+        }
+
+        .header-button:hover {
+            opacity: 0.8;
+        }
+
+        .sidebar {
+            position: fixed;
+            top: 66px;
+            left: 0;
+            width: 70px;
+            height: calc(100% - 66px);
+            background-color: #1D2333;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            padding-top: 10px;
+            padding-left: 10px;
+            z-index: 1000;
+        }
+
+        .menu {
+            padding: 0;
+            margin: 0;
+            list-style: none;
+            width: 100%;
+        }
+
+        .menu-item {
+            margin-bottom: 7px;
+            text-align: center;
+        }
+
+        .menu-item-link {
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            width: 50px;
+            height: 50px;
+            border-radius: 10px;
+            color: white;
+            font-size: 20px;
+            text-decoration: none;
+            position: relative;
+            transition: background 0.3s ease;
+            margin-left: 5px;
+        }
+
+        .menu-item-link:hover {
+            background-color: #293249;
+        }
+
+        .menu-item-link-icon {
+            font-size: 24px;
+            color: white;
+        }
+
+        .header-tooltip {
+            position: relative;
+        }
+
+        .header-tooltip::after {
+            content: attr(data-title);
+            position: absolute;
+            top: 50px;
+            right: -25px;
+            transform: translateY(-50%);
+            background: #293249;
+            color: white;
+            font-size: 12px;
+            padding: 5px 10px;
+            border-radius: 20px;
+            white-space: nowrap;
+            opacity: 0;
+            visibility: hidden;
+            transition: opacity 0.3s ease, transform 0.3s ease;
+        }
+
+        .header-tooltip:hover::after {
+            opacity: 1;
+            visibility: visible;
+            transform: translateY(-50%) translateX(5px);
+        }
+
+        .text-tooltip-tfr {
+            position: relative;
+        }
+
+        .text-tooltip-tfr::after {
+            content: attr(data-title);
+            position: absolute;
+            left: 60px;
+            top: 50%;
+            transform: translateY(-50%);
+            background: #293249;
+            color: white;
+            font-size: 12px;
+            padding: 5px 10px;
+            border-radius: 20px;
+            white-space: nowrap;
+            opacity: 0;
+            visibility: hidden;
+            transition: opacity 0.3s ease, transform 0.3s ease;
+        }
+
+        .text-tooltip-tfr:hover::after {
+            opacity: 1;
+            visibility: visible;
+            transform: translateY(-50%) translateX(5px);
+        }
+
+        .info-button {
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            width: 50px;
+            height: 50px;
+            border-radius: 10px;
+            color: white;
+            font-size: 20px;
+            text-decoration: none;
+            position: relative;
+            transition: background 0.3s ease;
+            margin-left: -9px;
+            margin-top: 20px;
+            margin-bottom: 18px;
+            cursor: pointer;
+        }
+
+        .info-button:hover {
+            background-color: #293249;
+        }
+
+        .info-button i {
+            font-size: 24px;
+            color: lightblue;
+        }
+
+        .category-filter-container {
+            margin-left: 20px;
+            display: inline-block;
+        }
+
+        #categoryFilterDropdown {
+            max-width: 155px;
+            height: 51px;
+            padding: 15px;
+            background: #11151F;
+            color: #fff;
+            border: none;
+            border-radius: 0 25px 25px 0;
+            font-size: 16px;
+            cursor: pointer;
+            outline: none;
+            margin-left: -1px;
+            scrollbar-width: thin; 
+            scrollbar-color: #2B3246 #11151F; 
+        }
+
+        #categoryFilterDropdown::-webkit-scrollbar {
+             width: 6px;
+        }
+        #categoryFilterDropdown::-webkit-scrollbar-track {
+            background: #11151F;
+        }
+        #categoryFilterDropdown::-webkit-scrollbar-thumb {
+            background-color: #2B3246;
+            border-radius: 5px;
+        }
+
+        @media (max-width: 768px) {
+            header {
+                flex-direction: column;
+                align-items: flex-start;
+                gap: 5px;
+                height: auto;
+            }
+
+            .header-logo {
+                width: 50%;
+                height: 25%;
+            }
+
+            .header-left, .header-right {
+                width: 100%;
+            }
+
+            .header-center {
+                width: 100%;
+                position: static;
+                left: 0%;
+                transform: translateX(-0%);
+                align-items: center;
+            }
+
+            header input {
+                width: 85%;
+                font-size: 14px;
+                padding: 10px;
+            }
+
+            .categories {
+                gap: 5px;
+            }
+
+            .entries {
+                display: flex;
+                flex-wrap: wrap;
+                justify-content: center;
+            }
+
+            .entry {
+                max-width: 130px;
+                max-height: 160px;
+            }
+
+            .entry img {
+                max-height: 60px;
+            }
+
+            .entry .label {
+                font-size: 12px;
+            }
+
+            .overlay-content {
+                width: 85%;
+                max-height: 75vh;
+                overflow-y: auto;
+            }
+
+            .add-entry {
+                flex-direction: column;
+                gap: 10px;
+            }
+
+            .add-entry input, .add-entry select, .add-entry button {
+                width: 100%;
+            }
+
+            .discord-button {
+                display: none;
+            }
+
+            .menu, .sidebar, .menu-item, .menu-item-link, .menu-item-link:hover, .menu-item-link-icon, .text-tooltip-tfr, .text-tooltip-tfr::after, .text-tooltip-tfr:hover::after {
+                display: none;
+            }
+
+            .header-button, .settings-button, .header-right::before, .settings-container::before {
+                display:none;
+            }
+
+            .container {
+                margin-left: 0px;
+            }
+        }
+    </style>
+</head>
+<body>
+    <header>
+        <div class="header-left">
+            <img class="header-logo" onclick="location.reload()" src="https://profile.griefergames.live/img/logo.png">
+            <h1 class="header-brand-text">Yamiseum</h1>
+        </div>
+
+        <div class="header-center">
+            <div class="search-filter-container">
+                <div class="input-with-clear">
+                  <input type="text" id="search" placeholder="Suchen..">
+                  <span class="clear-button" id="searchClear">×</span>
+                </div>
+                <select id="categoryFilterDropdown" onchange="applyCategoryFilter()">
+                  <option value="" disabled selected>Kategorien</option>
+                </select>
+              </div>              
+        </div>
+
+        <div class="header-right">
+                <!--        <button onclick="addEntry()" class="add-button">Yami hinzufügen</button> -->
+            <div class="settings-container">
+                <button class="settings-button" onclick="toggleDropdown()" title="Einstellungen">
+                    <i class="fa-solid fa-cog"></i>
+                </button>
+            </div>
+        </div>
+    </header>
+
+    <div class="container">
+        <div class="categories" id="categories"></div>
+    </div>
+
+    <div class="overlay" id="add-overlay" onclick="closeAddOverlayOnOutsideClick(event)">
+        <div class="overlay-content">
+            <h2>Neues Item hinzufügen</h2>
+            <input type="text" id="add-title" placeholder="Name">
+            <input type="text" id="add-image" placeholder="Bild-URL">
+            <textarea id="add-description" placeholder="Beschreibung"></textarea>
+            <input type="text" id="add-label" placeholder="Label">
+            <select id="add-category">
+                <option value="1.8">1.8</option>
+                <option value="Cloud">Cloud</option>
+            </select>
+            <button onclick="saveNewEntry()" style="background: #4caf50;">Hinzufügen</button>
+            <button class="overlay-close" onclick="closeAddOverlay()" style="background: #fc3535;">Abbrechen</button>
+        </div>
+    </div>
+
+    <div id="success-message">
+        Item erfolgreich hinzugefügt!
+    </div>
+    <div id="successdel-message" style="background: #fc3535;">
+        Item erfolgreich gelöscht!
+    </div>
+
+    <div class="overlay" id="overlay" onclick="closeOverlayOnOutsideClick(event)">
+        <div class="overlay-content">
+            <img id="overlay-image" src="" alt="Preview">
+            <h1 id="overlay-title" class="overlay-title"></h1>
+            <p id="overlay-description"></p>
+            <button class="overlay-close" onclick="closeOverlay()">Schließen</button>
+        </div>
+    </div>
+
+    <div class="overlay" id="edit-overlay" onclick="closeEditOverlayOnOutsideClick(event)">
+        <div class="overlay-content">
+            <h2>Item bearbeiten</h2>
+            <input type="text" id="edit-title" placeholder="Namen bearbeiten">
+            <input type="text" id="edit-image" placeholder="Bild-URL bearbeiten">
+            <textarea id="edit-description" placeholder="Beschreibung bearbeiten"></textarea>
+            <input type="text" id="edit-label" placeholder="Label bearbeiten">
+            <select id="edit-category">
+                <option value="1.8">1.8</option>
+                <option value="Cloud">Cloud</option>
+            </select>
+            <button onclick="saveEdit()" style="background: #4caf50;">Speichern</button>
+            <button class="overlay-close" onclick="deleteEntryFromEditOverlay()" style="background: #fc3535;">Löschen</button>
+            <button onclick="closeEditOverlay()" style="background: #11151F;">Abbrechen</button>
+        </div>
+    </div>
+
+    <div class="import-export-container">
+        <div class="menu">
+<!--            <button class="main-button" onclick="toggleDropdown()">+</button> -->
+            <div class="dropdown" id="dropdown-menu">
+                <button onclick="exportData()">Yamis exportieren</button>
+                <input type="file" id="import-file" style="display: none;" onchange="importData(event)">
+<!--            <button onclick="document.getElementById('import-file').click()">Importieren</button> -->
+            </div>
+        </div>
+    </div>
+
+    <nav class="sidebar">
+        <div class="menu-item">
+            <a class="menu-item-link text-tooltip-tfr info-button" onclick="openInfoPopup()" data-title="Informationen">
+                <i class="menu-item-link-icon fa-solid fa-info-circle"></i>
+            </a>
+        </div>
+        <ul class="menu small">
+            <li class="menu-item">
+                <a class="menu-item-link text-tooltip-tfr" href="https://items.griefergames.net/" data-title="Item-Liste" target="_blank">
+                    <i class="menu-item-link-icon fa-solid fa-list"></i>
+                </a>
+            </li>
+        </ul>
+        <div class="sidebar-discord">
+            <a href="https://discord.gg/REPBMu3zTQ" target="_blank" class="text-tooltip-tfr discord-button" data-title="Discord">
+                <img src="https://cdn.prod.website-files.com/6257adef93867e50d84d30e2/636e0a69f118df70ad7828d4_icon_clyde_blurple_RGB.svg"
+                     alt="Discord" class="discord-icon">
+            </a>
+        </div>
+    </nav>
+
+    <div id="info-popup" class="overlay" style="display: none;" onclick="closeInfoPopup(event)">
+        <div class="overlay-content">
+            <h2 style="color:lightcoral;">Informationen</h2>
+            <p>
+                Diese Seite ist das offizielle KurayamiXD Item-Museum.<br>
+                Falls Items fehlen sollten, könnt ihr euch gerne auf unserem
+                <a href="https://discord.gg/REPBMu3zTQ" style="color: lightgreen; text-decoration: none;">Discord</a> melden! :)
+            </p>
+            <button onclick="closeInfoPopup()">Okay</button>
+        </div>
+    </div>
+
+    <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css" rel="stylesheet">
+
+    <script>
+        let data = { "1.8": [], "Cloud": [] };
+
+        const categoriesContainer = document.getElementById('categories');
+        const searchInput = document.getElementById('search');
+        const overlay = document.getElementById('overlay');
+        const editOverlay = document.getElementById('edit-overlay');
+        const overlayImage = document.getElementById('overlay-image');
+        const overlayTitle = document.getElementById('overlay-title');
+        const overlayDescription = document.getElementById('overlay-description');
+        let editEntry = null;
+
+        /* function saveData() {
+            localStorage.setItem('Items', JSON.stringify(data));
+        } */
+
+        searchInput.addEventListener('input', () => {
+    if (searchInput.value.trim() !== '') {
+        searchClear.style.display = 'block';
+    } else {
+        searchClear.style.display = 'none';
+    }
+
+    if (!searchInput.value.includes('|')) {
+        document.getElementById('categoryFilterDropdown').selectedIndex = 0;
+    }
+
+    renderCategories();
+});
+
+
+searchClear.addEventListener('click', () => {
+    searchInput.value = '';
+    searchClear.style.display = 'none';
+    document.getElementById('categoryFilterDropdown').selectedIndex = 0;
+    renderCategories();
+});
+
+        let categoryState = {};
+        for (const category of Object.keys(data)) {
+            categoryState[category] = true;
+        }
+
+        function renderCategories() {
+            const searchValue = searchInput.value.toLowerCase().trim();
+            categoriesContainer.innerHTML = '';
+
+            for (const category of Object.keys(data)) {
+                const totalEntries = data[category].length;
+                let matchedCount = 0;
+
+                const categoryDiv = document.createElement('div');
+                categoryDiv.className = 'category';
+                categoryDiv.onclick = () => {
+                    categoryState[category] = !categoryState[category];
+                    renderCategories();
+                };
+
+                const categoryEntries = document.createElement('div');
+                categoryEntries.className = 'entries';
+                if (!categoryState[category]) {
+                    categoryEntries.classList.add('hidden');
+                }
+
+                for (const entry of data[category]) {
+                    let matchesSearch = [
+                        entry.title?.toLowerCase(),
+                        entry.description?.toLowerCase(),
+                        entry.label?.toLowerCase()
+                    ].some(text => text && text.includes(searchValue));
+
+                    if (!matchesSearch) continue;
+                    matchedCount++;
+
+                    const entryDiv = document.createElement('div');
+                    entryDiv.className = 'entry';
+                    entryDiv.onclick = () => openOverlay(entry);
+
+                    const img = document.createElement('img');
+                    img.src = entry.image;
+
+                    const title = document.createElement('div');
+                    title.className = 'entry-title';
+                    title.textContent = entry.title;
+
+                    if (entry.label) {
+                        const label = document.createElement('div');
+                        label.className = 'label';
+                        label.textContent = entry.label;
+                        entryDiv.appendChild(label);
+                    }
+
+                    const editButton = document.createElement('button');
+                    editButton.className = 'edit-btn';
+                    editButton.textContent = 'Bearbeiten';
+                    editButton.onclick = (e) => {
+                        e.stopPropagation();
+                        openEditOverlay(entry, category);
+                    };
+
+<!--                   entryDiv.appendChild(editButton); -->
+                    entryDiv.appendChild(img);
+                    entryDiv.appendChild(title);
+                    categoryEntries.appendChild(entryDiv);
+                }
+
+                const displayCount = searchValue === '' ? totalEntries : matchedCount;
+
+                const categoryTitleSpan = document.createElement('span');
+                categoryTitleSpan.className = 'category-title';
+                categoryTitleSpan.textContent = `${category} Netzwerk`;
+
+                const categoryCountSpan = document.createElement('span');
+                categoryCountSpan.className = 'category-count';
+                categoryCountSpan.textContent = `${displayCount} Yamis`;
+
+                const arrowSpan = document.createElement('span');
+                arrowSpan.className = 'category-arrow';
+                arrowSpan.textContent = categoryState[category] ? '▼' : '▶';
+
+                categoryDiv.appendChild(categoryTitleSpan);
+
+                const rightWrapper = document.createElement('div');
+                rightWrapper.style.display = 'flex';
+                rightWrapper.style.gap = '10px';
+
+                rightWrapper.appendChild(categoryCountSpan);
+                rightWrapper.appendChild(arrowSpan);
+                categoryDiv.appendChild(rightWrapper);
+
+                if (searchValue === '' || matchedCount > 0) {
+                    categoriesContainer.appendChild(categoryDiv);
+                    categoriesContainer.appendChild(categoryEntries);
+                }
+            }
+            styleRows();
+        }
+
+        function openOverlay(entry) {
+            const overlay = document.getElementById('overlay');
+            const overlayImage = document.getElementById('overlay-image');
+            const overlayTitle = document.getElementById('overlay-title');
+            const overlayDescription = document.getElementById('overlay-description');
+
+            overlayImage.src = entry.image;
+            overlayImage.alt = entry.title;
+            overlayTitle.textContent = entry.title;
+            overlayDescription.innerHTML = (entry.description || '').replace(/\n/g, '<br>');
+
+            const linkWrapper = document.createElement('a');
+            linkWrapper.href = entry.image;
+            linkWrapper.target = '_blank';
+            linkWrapper.appendChild(overlayImage.cloneNode());
+
+            overlayImage.replaceWith(linkWrapper);
+
+            overlay.style.display = 'flex';
+
+            const entryName = encodeURIComponent(entry.title.replace(/\s+/g, '_'));
+            history.pushState({ entry: entryName }, '', `#${entryName}`);
+        }
+
+        function openEntryFromHash() {
+            const hash = window.location.hash.substring(1);
+            if (!hash) return;
+
+            const decodedHash = decodeURIComponent(hash).replace(/_/g, ' ');
+
+            for (const category in data) {
+                const entry = data[category].find(e => e.title === decodedHash);
+                if (entry) {
+                    openOverlay(entry);
+                    break;
+                }
+            }
+        }
+
+        document.addEventListener('DOMContentLoaded', () => {
+            openEntryFromHash();
+            window.addEventListener('hashchange', openEntryFromHash);
+            loadInitData();
+        });
+
+        async function loadInitData() {
+            try {
+                const response = await fetch("https://ultraluca.github.io/Yami.json");
+                data = await response.json();
+                // saveData();
+                renderCategories();
+                openEntryFromHash();
+            } catch (error) {
+                console.error('Fehler beim Laden der Daten:', error);
+            }
+        }
+
+        function closeOverlay() {
+            overlay.style.display = 'none';
+            const currentURL = new URL(window.location.href);
+            currentURL.hash = '';
+            history.pushState({}, '', currentURL.toString());
+        }
+
+        function closeOverlayOnOutsideClick(event) {
+            if (event.target === overlay) {
+                closeOverlay();
+            }
+        }
+
+        function openEditOverlay(entry, category) {
+            editOverlay.style.display = 'flex';
+            document.getElementById('edit-title').value = entry.title;
+            document.getElementById('edit-image').value = entry.image;
+            document.getElementById('edit-description').value = entry.description || '';
+            document.getElementById('edit-label').value = entry.label || '';
+            document.getElementById('edit-category').value = category;
+            editEntry = { entry, category };
+        }
+
+        function closeEditOverlay() {
+            editOverlay.style.display = 'none';
+        }
+
+        function closeEditOverlayOnOutsideClick(event) {
+            if (event.target === editOverlay) {
+                closeEditOverlay();
+            }
+        }
+
+        function saveEdit() {
+            const title = document.getElementById('edit-title').value;
+            const image = document.getElementById('edit-image').value;
+            const description = document.getElementById('edit-description').value;
+            const label = document.getElementById('edit-label').value;
+            const category = document.getElementById('edit-category').value;
+
+            if (title && editEntry) {
+                const { entry, category: oldCategory } = editEntry;
+                data[oldCategory] = data[oldCategory].filter(e => e !== entry);
+                data[category].push({ title, image, description, label });
+                sortEntries();
+                // saveData();
+                renderCategories();
+                closeEditOverlay();
+            }
+        }
+
+        function deleteEntryFromEditOverlay() {
+            if (editEntry) {
+                const { entry, category } = editEntry;
+                data[category] = data[category].filter(e => e !== entry);
+                sortEntries();
+                // saveData();
+                renderCategories();
+                closeEditOverlay();
+
+                const successMessage = document.getElementById('successdel-message');
+                successMessage.style.display = 'block';
+                setTimeout(() => {
+                    successMessage.style.display = 'none';
+                }, 2000);
+            }
+        }
+
+        function addEntry() {
+            openAddOverlay();
+        }
+
+        function openAddOverlay() {
+            const addOverlay = document.getElementById('add-overlay');
+            addOverlay.style.display = 'flex';
+        }
+
+        function closeAddOverlay() {
+            const addOverlay = document.getElementById('add-overlay');
+            addOverlay.style.display = 'none';
+        }
+
+        function closeAddOverlayOnOutsideClick(event) {
+            const addOverlay = document.getElementById('add-overlay');
+            if (event.target === addOverlay) {
+                closeAddOverlay();
+            }
+        }
+
+        function saveNewEntry() {
+            const title = document.getElementById('add-title').value;
+            const image = document.getElementById('add-image').value;
+            const description = document.getElementById('add-description').value;
+            const label = document.getElementById('add-label').value;
+            const category = document.getElementById('add-category').value;
+
+            if (title) {
+                data[category].push({ title, image, description, label });
+                sortEntries();
+                // saveData();
+                renderCategories();
+                closeAddOverlay();
+
+                const successMessage = document.getElementById('success-message');
+                successMessage.style.display = 'block';
+                setTimeout(() => {
+                    successMessage.style.display = 'none';
+                }, 2000);
+            } else {
+                alert('Name ist erforderlich!');
+            }
+        }
+
+        function sortEntries(sortType = 'alphabetical') {
+            const transformUmlaut = (str) =>
+                str
+                    .replace(/Ä/g, 'Ae')
+                    .replace(/Ö/g, 'Oe')
+                    .replace(/Ü/g, 'Ue')
+                    .replace(/ä/g, 'ae')
+                    .replace(/ö/g, 'oe')
+                    .replace(/ü/g, 'ue');
+
+            for (const category in data) {
+                if (sortType === 'alphabetical') {
+                    data[category].sort((a, b) => {
+                        const titleA = transformUmlaut(a.title.toLowerCase());
+                        const titleB = transformUmlaut(b.title.toLowerCase());
+                        return titleA.localeCompare(titleB);
+                    });
+                } else if (sortType === 'reverse-alphabetical') {
+                    data[category].sort((a, b) => {
+                        const titleA = transformUmlaut(a.title.toLowerCase());
+                        const titleB = transformUmlaut(b.title.toLowerCase());
+                        return titleB.localeCompare(titleA);
+                    });
+                }
+            }
+        }
+
+        function styleRows() {
+            const categories = document.querySelectorAll('.entries');
+            categories.forEach((category) => {
+                const entries = Array.from(category.children);
+                let currentRowTop = 0;
+                let currentRow = [];
+                let isEvenRow = true;
+
+                entries.forEach((entry, index) => {
+                    const entryTop = entry.offsetTop;
+
+                    if (entryTop !== currentRowTop) {
+                        applyRowStyle(currentRow, isEvenRow);
+                        currentRow = [];
+                        currentRowTop = entryTop;
+                        isEvenRow = !isEvenRow;
+                    }
+                    currentRow.push(entry);
+                });
+
+                applyRowStyle(currentRow, isEvenRow);
+            });
+        }
+
+        function applyRowStyle(row, isEvenRow) {
+            const color = isEvenRow ? '#1D2333' : '#21283B';
+            row.forEach((entry) => {
+                entry.style.backgroundColor = color;
+            });
+        }
+
+        document.addEventListener('DOMContentLoaded', () => {
+            styleRows();
+            window.addEventListener('resize', styleRows);
+            renderCategories();
+        });
+
+        function toggleDropdown() {
+            const dropdown = document.getElementById('dropdown-menu');
+            dropdown.style.display = dropdown.style.display === 'block' ? 'none' : 'block';
+        }
+
+        document.addEventListener('click', function(event) {
+            const dropdown = document.getElementById('dropdown-menu');
+            const settingsButton = document.querySelector('.settings-button');
+            if (!dropdown.contains(event.target) && !settingsButton.contains(event.target)) {
+                dropdown.style.display = 'none';
+            }
+        });
+
+        function exportData() {
+            const dataStr = JSON.stringify(data, null, 2);
+            const blob = new Blob([dataStr], { type: 'application/json' });
+            const url = URL.createObjectURL(blob);
+            const a = document.createElement('a');
+            a.href = url;
+            a.download = 'Yami.json';
+            a.click();
+            URL.revokeObjectURL(url);
+        }
+
+        function importData(event) {
+            const file = event.target.files[0];
+            importDataFromFile(file);
+            alert('Yamis erfolgreich importiert!');
+        }
+
+        function importDataFromFile(file) {
+            if (file) {
+                const reader = new FileReader();
+                reader.onload = function(e) {
+                    try {
+                        const importedData = JSON.parse(e.target.result);
+                        data = importedData;
+                        // saveData();
+                        renderCategories();
+                    } catch (err) {
+                        alert('Ungültige JSON-Datei!');
+                    }
+                };
+                reader.readAsText(file);
+            }
+        }
+
+        document.addEventListener('click', function(event) {
+            const menu = document.querySelector('.menu');
+            if (!menu.contains(event.target)) {
+                menu.classList.remove('open');
+            }
+        });
+
+        const categoryFilters = {
+            "Alle": "",
+            "2018": "2018",
+            "2019": "2019",
+            "2020": "2020",
+            "2021": "2021",
+            "2022": "2022",
+            "2023": "2023",
+            "2024": "2024",
+            "2025": "2025"
+        };
+        
+        function populateCategoryFilter() {
+            const dropdown = document.getElementById('categoryFilterDropdown');
+            Object.entries(categoryFilters).forEach(([category, _]) => {
+                const option = document.createElement('option');
+                option.value = category;
+                option.textContent = category;
+                dropdown.appendChild(option);
+            });
+        }
+
+        function applyCategoryFilter() {
+    const dropdown = document.getElementById('categoryFilterDropdown');
+    const selectedCategory = dropdown.value;
+    const searchInput = document.getElementById('search');
+
+    if (selectedCategory === "Alles") {
+        searchInput.value = "";
+    } else {
+        searchInput.value = categoryFilters[selectedCategory] || "";
+    }
+
+    if (searchInput.value.trim() !== '') {
+        searchClear.style.display = 'block';
+    } else {
+        searchClear.style.display = 'none';
+    }
+
+    renderCategories();
+}
+        document.addEventListener('DOMContentLoaded', populateCategoryFilter);
+
+        function openInfoPopup() {
+            document.getElementById('info-popup').style.display = 'flex';
+        }
+        function closeInfoPopup(event) {
+            const popup = document.getElementById('info-popup');
+            if (event.target === popup || event.target.tagName === 'BUTTON') {
+                popup.style.display = 'none';
+            }
+        }
+    </script>
+</body>
+</html>
